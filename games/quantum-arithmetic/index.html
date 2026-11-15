@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8f8f5" />
+    <title>Quantum arithmetic</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="leaderboard.js" defer></script>
+    <script src="game.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <a class="wordmark" href="./" aria-label="Quantum arithmetic home"><span class="logo" aria-hidden="true">q.</span> quantum arithmetic</a>
+        <span class="edition">a little mental quantum mechanics</span>
+      </header>
+
+      <section class="game" aria-label="Quantum gate quiz">
+        <div class="stats">
+          <div><span class="label">TIME</span><span class="stat" id="time">60<span class="unit">s</span></span></div>
+          <div><span class="label">SCORE</span><span class="stat" id="score">0</span></div>
+          <div><span class="label">BEST</span><span class="stat" id="best">0</span></div>
+        </div>
+        <div class="timer-track" aria-hidden="true"><div id="timer-bar"></div></div>
+
+        <div id="intro" class="screen">
+          <p class="eyebrow">SMALL GATES. QUICK THINKING.</p>
+          <h1>A little quantum<br />mental math.</h1>
+          <p class="description">One gate. One state. What comes out?<br />See how many you can solve in 60 seconds.</p>
+          <button class="primary" id="start">Let’s play <span aria-hidden="true">↗</span></button>
+          <p class="hint">or press enter</p>
+        </div>
+
+        <div id="quiz" class="screen" hidden>
+          <p class="eyebrow">WHAT’S THE OUTPUT?</p>
+          <h1 class="equation" id="question" aria-label="Question"></h1>
+          <div class="answers" id="answers" aria-label="Possible output states"></div>
+          <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+          <p class="hint">press 1–4 to choose <span class="hint-dot">·</span> <span id="streak">find your flow</span></p>
+        </div>
+
+        <div id="results" class="screen" hidden>
+          <p class="eyebrow">TIME’S UP. NICELY PLAYED.</p>
+          <h1><span id="final-score">0</span> correct.</h1>
+          <p class="description" id="summary"></p>
+          <button class="primary" id="restart">One more round <span aria-hidden="true">↗</span></button>
+          <p class="hint">or press enter</p>
+        </div>
+      </section>
+
+      <section class="leaderboard" aria-labelledby="leaderboard-title">
+        <div class="leaderboard-heading">
+          <h2 id="leaderboard-title">The leaderboard</h2>
+          <button class="text-button" id="refresh-leaderboard" type="button">Refresh ↻</button>
+        </div>
+        <p class="leaderboard-caption">All-time top 10 · 60-second rounds · no account needed</p>
+        <form id="score-form" hidden>
+          <label for="nickname">Put your round on the board</label>
+          <div class="score-form-fields">
+            <input id="nickname" name="nickname" placeholder="Your nickname" autocomplete="nickname" minlength="1" maxlength="24" required aria-describedby="nickname-note" />
+            <button class="primary" id="submit-score" type="submit">Post score ↗</button>
+          </div>
+          <p class="hint" id="nickname-note">Your nickname and score will be public. Avoid personal information.</p>
+        </form>
+        <p class="leaderboard-status" id="submission-status" role="status"></p>
+        <p class="leaderboard-status" id="leaderboard-status" role="status">Loading scores…</p>
+        <div class="leaderboard-table-wrapper">
+          <table id="leaderboard-table" hidden>
+            <caption class="sr-only">Top 10 rounds, ranked by correct answers, then accuracy, then earliest submission.</caption>
+            <thead><tr><th scope="col">#</th><th scope="col">Player</th><th scope="col">Correct</th><th scope="col">Accuracy</th></tr></thead>
+            <tbody id="leaderboard-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <details class="reference">
+        <summary>A tiny refresher <span aria-hidden="true">+</span></summary>
+        <div class="reference-content">
+          <div><b>X</b><p>Flips the bit.<br />X|0⟩ = |1⟩</p></div>
+          <div><b>Y</b><p>Flips, with a phase.<br />Y|0⟩ = i|1⟩</p></div>
+          <div><b>Z</b><p>Flips the phase.<br />Z|1⟩ = −|1⟩</p></div>
+          <div><b>H</b><p>Makes superposition.<br />H|0⟩ = |+⟩</p></div>
+          <p class="reference-note">|+⟩ = (|0⟩ + |1⟩)/√2 &nbsp; · &nbsp; |−⟩ = (|0⟩ − |1⟩)/√2<br />We keep exact phases here, even when they’re physically equivalent as global phases.</p>
+        </div>
+      </details>
+      <footer>less arithmetic. more amplitude.<span>X · Y · Z · H</span></footer>
+    </main>
+  </body>
+</html>
