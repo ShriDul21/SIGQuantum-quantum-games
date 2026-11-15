@@ -7,6 +7,7 @@ A collection of quantum games. Each game lives in its own self-contained folder 
 | Game | Folder | Description |
 | --- | --- | --- |
 | Quantum arithmetic | [`games/quantum-arithmetic`](games/quantum-arithmetic) | A minimal, 60-second quantum-gate quiz with a Supabase leaderboard. |
+| Quantum Poker | [`games/quantum-poker`](games/quantum-poker) | A local Python/Tkinter quantum poker game with Qiskit. |
 
 ```text
 games/
@@ -21,6 +22,13 @@ games/
     package.json
     .env.example
     README.md
+    vercel.json
+  quantum-poker/
+    Python/
+    tests/
+    gui.py
+    requirements-gui.txt
+    README.md
 ```
 
 Add future games under `games/<game-name>/`, keeping their assets, APIs, dependencies, tests, and setup instructions inside that folder. No shared build system or workspace setup is required.
@@ -31,8 +39,8 @@ Create **one Vercel project per game**, all connected to this same GitHub reposi
 
 1. In Vercel, choose **Add New → Project** and import this repository.
 2. Give the project a game-specific name, such as `sigquantum-arithmetic`.
-3. Set **Root Directory** to `games/quantum-arithmetic`.
-4. For this vanilla game, choose **Framework Preset: Other**, leave **Build Command** empty, and set **Output Directory** to `.`. Paths are relative to the selected Root Directory. Use Node.js 22.x.
+3. Set **Root Directory** to `games/quantum-arithmetic` and **Production Branch** to `main`.
+4. For this vanilla game, choose **Framework Preset: Other**, leave **Build Command** empty, and set **Output Directory** to `.`. The game's `vercel.json` also records these build settings. Paths are relative to the selected Root Directory. Use Node.js 22.x.
 5. Add the environment variables described in the [game's setup guide](games/quantum-arithmetic/README.md), then deploy.
 6. For the next game, import the **same repository again** as a new Vercel project, choosing that game's folder and its own build settings.
 
@@ -54,6 +62,26 @@ Git pushes can trigger deployments for multiple connected projects; a separate p
 ### If arithmetic is already deployed
 
 Update the **existing project's Settings → Build and Deployment → Root Directory** to `games/quantum-arithmetic`, keep Output Directory as `.`, and redeploy the commit containing this move. This keeps its existing URL, domains, and environment variables. No Supabase migration or new table is needed just because files moved.
+
+### Troubleshooting arithmetic 404s
+
+- Check the deployment's source branch and commit. Use **`main`**, not `master`; `master` contains the original standalone Python poker game, not the arithmetic website.
+- Set the Vercel project's **Root Directory** to exactly `games/quantum-arithmetic`. The repository root has no `index.html`.
+- **Output Directory** is `.` relative to that root, **not** `games/quantum-arithmetic`, `public`, or `dist`. There is no build step generating a `dist` folder.
+- Deploy the latest commit after changing settings. Redeploying an older commit does not pick up newer files. Open the new deployment's own URL to rule out an outdated custom-domain target.
+- Visit `/` on the arithmetic deployment, not `/games/quantum-arithmetic/`. Its API is `/api/scores`; missing Supabase variables return a JSON 503, not a missing-page 404.
+
+### Quantum Poker is a desktop game
+
+The former `master` branch's history is merged into `main`, with its files under `games/quantum-poker/`. It requires Python, Tkinter, and a graphical desktop; it cannot run as a Vercel website without a separate web port. Run it locally from its own folder:
+
+```sh
+cd games/quantum-poker
+python3 -m pip install -r requirements-gui.txt
+python3 gui.py
+```
+
+See the [Poker README](games/quantum-poker/README.md) for rules, tests, and original project documentation. Its original license is preserved in that folder.
 
 ### Supabase for multiple games
 

@@ -25,12 +25,15 @@ Never paste the secret key into `game.js`, `leaderboard.js`, HTML, GitHub, or ch
 
 1. Push this repository to GitHub.
 2. In [Vercel](https://vercel.com/new), import the repository.
+   Set the project's **Production Branch** to **`main`**, not `master` (the standalone Python poker branch).
 3. Use these project settings:
    - **Framework Preset:** Other
    - **Root Directory:** `games/quantum-arithmetic`
    - **Build Command:** no command (if needed, enable Override and leave it empty)
    - **Output Directory:** `.` (relative to the game's Root Directory)
    - **Node.js:** 22.x (also set in `package.json`)
+
+   The included `vercel.json` pins the framework, build command, and output directory. Root Directory and Production Branch are project settings you must set in Vercel; the config cannot select them.
 4. Add these **Environment Variables** before deploying:
 
    | Name | Value |
@@ -64,6 +67,7 @@ Open the localhost URL it prints. A plain static file server won't run `/api/sco
 
 ### Troubleshooting
 
+- **404 at the website homepage:** confirm the deployment uses the latest commit on `main`, Root Directory is `games/quantum-arithmetic`, Framework is Other, and Output Directory is `.`. There is no root-level website or `dist` folder. Deploy again after updating settings and open the new deployment's URL at `/`, not `/games/quantum-arithmetic/`.
 - **"Leaderboard not configured yet":** check both Vercel environment variable names and their deployment environment, then redeploy.
 - **"Leaderboard unavailable":** make sure the SQL ran in the same Supabase project as your URL/key, the project is active, the Data API is enabled for the `public` schema, and you used a secret—not publishable—key.
 - **404 or HTML from `/api/scores`:** check the Vercel root directory and Framework Preset. Do not add a catch-all rewrite to `index.html`; it would hide the API route.
