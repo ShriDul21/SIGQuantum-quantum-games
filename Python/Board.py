@@ -6,9 +6,9 @@
 from os.path import dirname, abspath
 import sys
 sys.path.append(dirname(abspath(__file__)))
-from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit, execute
+from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 from Python.helpFiles import get2DiffRandNum, get3DiffRandNum
-from qiskit import BasicAer
+from qiskit.quantum_info import Statevector
 from numpy import power, abs, where, array, zeros, empty, absolute, sort
 from numpy.random import randint, seed
 from scipy.constants import pi
@@ -87,7 +87,7 @@ class Board:
             pass
 
         elif gate == "SRX":
-            self.qc.u3(pi/2, pi/2, -pi/2, self.q[int(gateCoords[0])])
+            self.qc.u(pi/2, pi/2, -pi/2, self.q[int(gateCoords[0])])
 
         elif gate == "CX":
             qubit1 = int(gateCoords[0])
@@ -168,6 +168,7 @@ class Board:
         :param psi: The wavevector of the system.
         :return: The probabilities
         """
+        coords = array(coords)
         order = array([where(coords==i)[0][0] for i in sort(coords)])
         probs = zeros(4)
         dist = array([0, 2**(coords[0]), 2**(coords[1]),  2**(coords[0])+2**(coords[1])])
@@ -193,6 +194,7 @@ class Board:
         :param psi: The wavevector of the system.
         :return: The probabilities
         """
+        coords = array(coords)
         order = array([where(coords==i)[0][0] for i in sort(coords)])
         probs = zeros(8)
         dist = array([0, 2**coords[2], 2**coords[1], 2**coords[0], 2**coords[1]+2**coords[2], 2**coords[0]+2**coords[2],
@@ -215,8 +217,7 @@ class Board:
         Finds the wavevector of the system
         :return: The wavevector of the system
         """
-        return execute(self.qc, BasicAer.get_backend("statevector_simulator"), shots=1).result()\
-                          .get_statevector(self.qc)
+        return Statevector.from_instruction(self.qc).data
 
     def findBellPairs(self):
         """
@@ -257,8 +258,8 @@ class Board:
             qbit1, qbit2 = get2DiffRandNum(self.size)
             self.qc.cx(self.q[qbit1], self.q[qbit2])
         elif gate=="SRX":
-            self.qc.u3(pi/2, pi/2, -pi/2, self.q[randint(0, self.size)])
+            self.qc.u(pi/2, pi/2, -pi/2, self.q[randint(0, self.size)])
         elif gate=="SRZ":
             self.qc.s(self.q[randint(0, self.size)])
         elif gate == "U":
-            self.qc.u3(randint(0, 360)*pi/360, randint(0, 4)*pi/4, randint(0, 4)*pi/4, self.q[randint(0, self.size)])
+            self.qc.u(randint(0, 360)*pi/360, randint(0, 4)*pi/4, randint(0, 4)*pi/4, self.q[randint(0, self.size)])

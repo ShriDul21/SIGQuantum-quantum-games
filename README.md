@@ -1,9 +1,69 @@
 # Quantum Poker
+
+## Desktop GUI
+
+Run the new local, pass-and-play desktop app from this repository:
+
+```bash
+python3 -m pip install -r requirements-gui.txt
+python3 gui.py
+```
+
+On macOS, you can also double-click **Launch Quantum Poker.command** once the
+requirements are installed. Python 3.10+ with Tkinter is required. Python.org's
+macOS installer includes Tkinter; on Linux, install your distribution's
+`python3-tk` package if needed. The app needs a graphical desktop session.
+
+The GUI supports 2–5 named players, covered handoff screens, four betting
+rounds, H/X/ZH/CX gate cards, clickable qubits with probabilities and Bell-pair
+labels, correlated quantum measurement, split pots, all-ins and side pots,
+rotating blinds, and elimination across hands. Select a gate, then its target;
+for CX, select the control first and a different target second. Each player's
+operations affect only their own copy of the board. No network or IBM account
+is needed during play.
+
+This entry point reuses `Python/Board.py` and the original gate dealer with a
+separate UI-independent betting controller. The board now uses Qiskit's
+`Statevector` API. The original Matplotlib and notebook launchers are legacy
+interfaces and still depend on older Qiskit APIs; use `gui.py` with the new
+requirements. Raises follow the original game's simplified rule: any positive
+whole number is allowed. Odd split-pot chips go in seat order starting with
+the small blind. This is shared-device play, with no bots or online multiplayer.
+
+Run the game and quantum-logic checks with:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
 This repository contains all the necessary components to learn and play quantum poker. The game works in the same way as Texas hold 'em poker with the main difference being that the community cards are replaced by qubits and the player cards are replaced by quantum logic gates. Don't fear if you don't understand the jargon, you can play the game anyway.
 This implementation is a proof-of-concept, but it is fully possible to create apps for mobile phones or tablets.
 We hope that you will enjoy the game and get curious to look "under the hood" and learn quantum computing!
 
 ![Quantum Poker](quantumpoker.jpg)
+
+## Desktop interface design
+
+The desktop interface follows Apple's [macOS guidance](https://developer.apple.com/design/human-interface-guidelines/designing-for-macos),
+[button guidance](https://developer.apple.com/design/human-interface-guidelines/buttons),
+and [typography guidance](https://developer.apple.com/design/human-interface-guidelines/typography).
+It uses Tk's native Aqua theme on macOS, system font and supported semantic colors,
+a single primary action per screen, standard entry fields, a Game menu, and
+scrollable content for smaller windows. Other platforms use a neutral light theme.
+This remains a Tk app; it does not implement SwiftUI or Liquid Glass.
+
+Qubits display readable state and probability labels. During gate placement they
+become standard focusable buttons, including a text label for the CX control.
+Tab navigates controls and Space/Return activates a focused button. Return also
+activates a screen's default action when a control is not focused; in the raise
+field it submits that raise. Escape cancels a gate selection or covers the hand.
+Command-N opens new-table setup (with confirmation during a match), and Command-W
+closes the window; other platforms use Control. Help stays open in its own
+scrollable window. Invalid bets display inline without clearing the entered value.
+
+The game logic tests pass. Native rendering, keyboard focus, and appearance still
+need an on-device visual check: the current execution environment aborts while
+creating even an empty Tk window.
 
 ## Basic Rules to get started
 In order to play the basic version of this game, one does not have to learn any quantum physics, or have a rigorous understanding of poker rules.  Even if this game involves only rudimentary essentials of quantum computing, people that are new to the field will find that it takes some time to get used to the rule set. Just as with any other game, one has to learn the rules of the game, which are described in the following.
